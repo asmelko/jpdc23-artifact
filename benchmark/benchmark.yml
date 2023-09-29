@@ -1,0 +1,476 @@
+benchmark:
+  name: jpdc-benchmark
+  groups:
+    - name: one_to_one
+      config:
+        # All input sizes to measure with
+        # Format is matrix_rows, matrix_cols, number of left matrices, number of right matrices
+        sizes:
+          - "16x16x1x1"
+          - "24x24x1x1"
+          - "32x32x1x1"
+          - "48x48x1x1"
+          - "64x64x1x1"
+          - "96x96x1x1"
+          - "128x128x1x1"
+          - "192x192x1x1"
+          - "256x256x1x1"
+        # Use float type, not double
+        data_type: single
+        # Measure the whole Computation, but without data loading from disk
+        benchmark_type: Algorithm
+        # Outer iterations run the cross executable again, clearing caches and loading data
+        outer_iterations: 1
+        # Inner iterations run just the comutation steps with data already loaded in host memory
+        inner_iterations: 10
+        # Minimum time measured by adaptive iteration count is 1 second
+        min_measure_seconds: 0.1
+        # If validation data should be generated and the results compared with it. Here we are only interested in execution times.
+        validate: false
+        # If result of the computation should be kept. Here we are only interested in the execution times.
+        keep: false
+      runs:
+        - name: original
+          # Name of the algorithm, listed by ./cross list
+          algorithm: nai_orig_one_to_one
+
+        - name: basic
+          algorithm: nai_shuffle_one_to_one
+          args:
+            warps_per_thread_block: [4, 8]
+
+        - name: work_distribution
+          algorithm: nai_shuffle_work_distribution_one_to_one
+          args:
+            warps_per_thread_block: [4, 8]
+            rows_per_thread: [1, 2, 4, 8, 16]
+            distribution_type: ['rectangle', 'triangle']
+
+        - name: multirow_both
+          algorithm: nai_shuffle_multirow_both_one_to_one
+          args:
+            warps_per_thread_block: [4, 8]
+            shifts_per_thread: [1, 2, 4, 8]
+            left_rows_per_iteration: [1, 2, 4, 8]
+
+        - name: warp-per-shift
+          algorithm: nai_warp_per_shift_one_to_one
+          args:
+            shifts_per_thread_block: [4, 16, 32]
+
+        - name: warp-per-shift-work-distribution
+          algorithm: nai_warp_per_shift_work_distribution_one_to_one
+          args:
+            shifts_per_thread_block: [4, 16, 32]
+            rows_per_warp: [1, 8, 16]
+            distribution_type: ['rectangle', 'triangle']
+
+        - name: warp-per-shift-shared-memory
+          algorithm: nai_warp_per_shift_shared_mem_one_to_one
+          args:
+            shifts_per_thread_block: [8, 16, 32]
+            shared_mem_row_size: [32, 128, 256]
+            strided_load: [false, true]
+            column_group_per_block: [false, true]
+
+        - name: block-per-shift
+          algorithm: nai_block_per_shift_one_to_one
+          args:
+            block_size: [64, 128, 256, 512]
+
+        - name: fft
+          algorithm: fft_orig_one_to_one
+
+    - name: one_to_one_saturated
+      config:
+        # All input sizes to measure with
+        # Format is matrix_rows, matrix_cols, number of left matrices, number of right matrices
+        sizes:
+          - "16x16x1x1"
+          - "24x24x1x1"
+          - "32x32x1x1"
+          - "48x48x1x1"
+          - "64x64x1x1"
+          - "96x96x1x1"
+          - "128x128x1x1"
+          - "192x192x1x1"
+          - "256x256x1x1"
+        # Use float type, not double
+        data_type: single
+        # Measure the whole Computation, but without data loading from disk
+        benchmark_type: Algorithm
+        # Outer iterations run the cross executable again, clearing caches and loading data
+        outer_iterations: 1
+        # Inner iterations run just the comutation steps with data already loaded in host memory
+        inner_iterations: 10
+        # Minimum time measured by adaptive iteration count is 1 second
+        min_measure_seconds: 0.1
+        # If validation data should be generated and the results compared with it. Here we are only interested in execution times.
+        validate: false
+        # If result of the computation should be kept. Here we are only interested in the execution times.
+        keep: false
+      runs:
+
+        - name: basic
+          algorithm: nai_shuffle_one_to_one
+          args:
+            warps_per_thread_block: [4, 8]
+
+        - name: multirow_both
+          algorithm: nai_shuffle_multirow_both_one_to_one
+          args:
+            warps_per_thread_block: [4, 8]
+            shifts_per_thread: [1, 2, 4, 8]
+            left_rows_per_iteration: [1, 2, 4, 8]
+
+    - name: one_to_many
+      config:
+        # All input sizes to measure with
+        # Format is matrix_rows, matrix_cols, number of left matrices, number of right matrices
+        sizes:
+          - "16x16x1x2"
+          - "16x16x1x8"
+          - "16x16x1x32"
+          - "32x32x1x2"
+          - "32x32x1x8"
+          - "32x32x1x32"
+          - "64x64x1x2"
+          - "64x64x1x8"
+          - "64x64x1x32"
+          - "128x128x1x2"
+          - "128x128x1x8"
+          - "128x128x1x32"
+          - "256x256x1x2"
+          - "256x256x1x8"
+          - "256x256x1x32"
+        # Use float type, not double
+        data_type: single
+        # Measure the whole Computation, but without data loading from disk
+        benchmark_type: Algorithm
+        # Outer iterations run the cross executable again, clearing caches and loading data
+        outer_iterations: 1
+        # Inner iterations run just the comutation steps with data already loaded in host memory
+        inner_iterations: 10
+        # Minimum time measured by adaptive iteration count is 1 second
+        min_measure_seconds: 0.1
+        # If validation data should be generated and the results compared with it. Here we are only interested in execution times.
+        validate: false
+        # If result of the computation should be kept. Here we are only interested in the execution times.
+        keep: false
+      runs:
+        - name: original
+          algorithm: nai_orig_one_to_many
+
+        - name: multimat-right
+          algorithm: nai_shuffle_multimat_right_one_to_many
+          args:
+            warps_per_thread_block: [4, 8]
+            right_matrices_per_thread: [1, 2, 4, 8]
+
+        - name: multimat-right-work-distribution
+          algorithm: nai_shuffle_multimat_right_work_distribution_one_to_many
+          args:
+            warps_per_thread_block: [4, 8]
+            right_matrices_per_thread: [1, 2, 4, 8]
+            rows_per_thread: [1, 4, 8, 16]
+            distribution_type: ['rectangle', 'triangle']
+
+        - name: multimat-right-multirow-both
+          algorithm: nai_shuffle_multirow_both_multimat_right_one_to_many
+          args:
+            warps_per_thread_block: [4, 8]
+            right_matrices_per_thread: [1, 2, 4]
+            shifts_per_thread_right_matrix: [1, 2, 4]
+            left_rows_per_iteration: [1, 2, 4]
+
+        - name: warp-per-shift-shared-memory
+          algorithm: nai_warp_per_shift_shared_mem_one_to_many
+          args:
+            shifts_per_thread_block: [8, 16, 32]
+            shared_mem_row_size: [32, 128, 256]
+            strided_load: [false, true]
+            column_group_per_block: [false, true]
+            right_matrices_per_block: [1, 2, 4, 8]
+
+        - name: fft
+          algorithm: fft_orig_one_to_many
+
+    - name: one_to_many_saturated
+      config:
+        # All input sizes to measure with
+        # Format is matrix_rows, matrix_cols, number of left matrices, number of right matrices
+        sizes:
+          - "16x16x1x4000"
+          - "32x32x1x4000"
+          - "64x64x1x4000"
+          - "128x128x1x4000"
+          - "256x256x1x4000"
+        # Use float type, not double
+        data_type: single
+        # Measure the whole Computation, but without data loading from disk
+        benchmark_type: Algorithm
+        # Outer iterations run the cross executable again, clearing caches and loading data
+        outer_iterations: 1
+        # Inner iterations run just the comutation steps with data already loaded in host memory
+        inner_iterations: 10
+        # Minimum time measured by adaptive iteration count is 1 second
+        min_measure_seconds: 0.1
+        # If validation data should be generated and the results compared with it. Here we are only interested in execution times.
+        validate: false
+        # If result of the computation should be kept. Here we are only interested in the execution times.
+        keep: false
+      runs:
+        - name: original
+          algorithm: nai_orig_one_to_many
+
+        - name: multimat-right
+          algorithm: nai_shuffle_multimat_right_one_to_many
+          args:
+            warps_per_thread_block: [4, 8]
+            right_matrices_per_thread: [1, 2, 4, 8]
+
+        - name: multimat-right-multirow-both
+          algorithm: nai_shuffle_multirow_both_multimat_right_one_to_many
+          args:
+            warps_per_thread_block: [4, 8]
+            right_matrices_per_thread: [1, 2, 4]
+            shifts_per_thread_right_matrix: [1, 2, 4]
+            left_rows_per_iteration: [1, 2, 4]
+
+        - name: fft
+          algorithm: fft_orig_one_to_many
+
+    - name: n_to_mn
+      config:
+        # All input sizes to measure with
+        # Format is matrix_rows, matrix_cols, number of left matrices, number of right matrices
+        sizes:
+          - "16x16x2x8"
+          - "16x16x4x16"
+          - "16x16x8x32"
+          - "32x32x2x8"
+          - "32x32x4x16"
+          - "32x32x8x32"
+          - "64x64x2x8"
+          - "64x64x4x16"
+          - "64x64x8x32"
+          - "128x128x2x8"
+          - "128x128x4x16"
+          - "128x128x8x32"
+          - "256x256x2x8"
+          - "256x256x4x16"
+          - "256x256x8x32"
+        # Use float type, not double
+        data_type: single
+        # Measure the whole Computation, but without data loading from disk
+        benchmark_type: Algorithm
+        # Outer iterations run the cross executable again, clearing caches and loading data
+        outer_iterations: 1
+        # Inner iterations run just the comutation steps with data already loaded in host memory
+        inner_iterations: 10
+        # Minimum time measured by adaptive iteration count is 1 second
+        min_measure_seconds: 0.1
+        # If validation data should be generated and the results compared with it. Here we are only interested in execution times.
+        validate: false
+        # If result of the computation should be kept. Here we are only interested in the execution times.
+        keep: false
+      runs:
+        - name: original
+          algorithm: nai_orig_n_to_mn
+
+        - name: multimat-right
+          algorithm: nai_shuffle_multimat_right_work_distribution_n_to_mn
+          args:
+            warps_per_thread_block: [4, 8]
+            right_matrices_per_thread: [1, 2, 4, 8]
+            rows_per_thread: 1
+            distribution_type: ['none']
+            num_cuda_streams: [20]
+
+        - name: multimat-right-work-distribution
+          algorithm: nai_shuffle_multimat_right_work_distribution_n_to_mn
+          args:
+            warps_per_thread_block: [4, 8]
+            right_matrices_per_thread: [1, 2, 4, 8]
+            rows_per_thread: [1, 4, 8, 16]
+            distribution_type: ['rectangle', 'triangle']
+            num_cuda_streams: [20]
+
+        - name: multimat-right-multirow-both
+          algorithm: nai_shuffle_multirow_both_multimat_right_n_to_mn
+          args:
+            warps_per_thread_block: [4, 8]
+            right_matrices_per_thread: [1, 2, 4]
+            shifts_per_thread_right_matrix: [1, 2, 4]
+            left_rows_per_iteration: [1, 2, 4]
+            num_cuda_streams: [20]
+
+        - name: fft
+          algorithm: fft_orig_n_to_mn
+
+    - name: n_to_mn_saturated
+      config:
+        # All input sizes to measure with
+        # Format is matrix_rows, matrix_cols, number of left matrices, number of right matrices
+        sizes:
+          - "16x16x100x4000"
+          - "32x32x100x4000"
+          - "64x64x100x4000"
+          - "128x128x100x4000"
+          - "256x256x100x4000"
+        # Use float type, not double
+        data_type: single
+        # Measure the whole Computation, but without data loading from disk
+        benchmark_type: Algorithm
+        # Outer iterations run the cross executable again, clearing caches and loading data
+        outer_iterations: 1
+        # Inner iterations run just the comutation steps with data already loaded in host memory
+        inner_iterations: 10
+        # Minimum time measured by adaptive iteration count is 1 second
+        min_measure_seconds: 0.1
+        # If validation data should be generated and the results compared with it. Here we are only interested in execution times.
+        validate: false
+        # If result of the computation should be kept. Here we are only interested in the execution times.
+        keep: false
+      runs:
+        - name: original
+          algorithm: nai_orig_n_to_mn
+
+        - name: multimat-right
+          algorithm: nai_shuffle_multimat_right_work_distribution_n_to_mn
+          args:
+            warps_per_thread_block: [4, 8]
+            right_matrices_per_thread: [1, 2, 4, 8]
+            rows_per_thread: 1
+            distribution_type: ['none']
+            num_cuda_streams: [20]
+
+        - name: multimat-right-multirow-both
+          algorithm: nai_shuffle_multirow_both_multimat_right_n_to_mn
+          args:
+            warps_per_thread_block: [4, 8]
+            right_matrices_per_thread: [1, 2, 4]
+            shifts_per_thread_right_matrix: [1, 2, 4]
+            left_rows_per_iteration: [1, 2, 4]
+            num_cuda_streams: [20]
+
+        - name: fft
+          algorithm: fft_orig_n_to_mn
+
+    - name: n_to_m
+      config:
+        # All input sizes to measure with
+        # Format is matrix_rows, matrix_cols, number of left matrices, number of right matrices
+        sizes:
+          - "16x16x2x2"
+          - "16x16x8x8"
+          - "16x16x32x32"
+          - "32x32x2x2"
+          - "32x32x8x8"
+          - "32x32x32x32"
+          - "64x64x2x2"
+          - "64x64x8x8"
+          - "64x64x32x32"
+          - "128x128x2x2"
+          - "128x128x8x8"
+          - "128x128x32x32"
+          - "256x256x2x2"
+          - "256x256x8x8"
+          - "256x256x32x32"
+        # Use float type, not double
+        data_type: single
+        # Measure the whole Computation, but without data loading from disk
+        benchmark_type: Algorithm
+        # Outer iterations run the cross executable again, clearing caches and loading data
+        outer_iterations: 1
+        # Inner iterations run just the comutation steps with data already loaded in host memory
+        inner_iterations: 10
+        # Minimum time measured by adaptive iteration count is 1 second
+        min_measure_seconds: 1
+        # If validation data should be generated and the results compared with it. Here we are only interested in execution times.
+        validate: false
+        # If result of the computation should be kept. Here we are only interested in the execution times.
+        keep: false
+      runs:
+        - name: original
+          algorithm: nai_orig_n_to_m
+
+        - name: multimat-both
+          algorithm: nai_shuffle_multimat_both_work_distribution_n_to_m
+          args:
+            warps_per_thread_block: [4, 8]
+            left_matrices_per_thread: [1, 2, 4]
+            right_matrices_per_thread: [1, 2, 4]
+            rows_per_thread: 1
+            distribution_type: ['none']
+
+        - name: multimat-both-work-distribution
+          algorithm: nai_shuffle_multimat_both_work_distribution_n_to_m
+          args:
+            warps_per_thread_block: [4, 8]
+            left_matrices_per_thread: [1, 2, 4]
+            right_matrices_per_thread: [1, 2, 4]
+            rows_per_thread: [1, 4, 8, 16]
+            distribution_type: ['rectangle', 'triangle']
+
+        - name: multimat-both-multirow-both
+          algorithm: nai_shuffle_multirow_both_multimat_both_n_to_m
+          args:
+            warps_per_thread_block: [4, 8]
+            left_matrices_per_thread: [1, 2, 4]
+            right_matrices_per_thread: [1, 2, 4]
+            shifts_per_thread_right_matrix: [1, 2, 4]
+            left_rows_per_iteration: [1, 2, 4]
+
+        - name: fft
+          algorithm: fft_better_n_to_m
+
+    - name: n_to_m_saturated
+      config:
+        # All input sizes to measure with
+        # Format is matrix_rows, matrix_cols, number of left matrices, number of right matrices
+        sizes:
+          - "16x16x128x128"
+          - "32x32x128x128"
+          - "64x64x128x128"
+          - "128x128x128x128"
+          - "256x256x128x128"
+        # Use float type, not double
+        data_type: single
+        # Measure the whole Computation, but without data loading from disk
+        benchmark_type: Algorithm
+        # Outer iterations run the cross executable again, clearing caches and loading data
+        outer_iterations: 1
+        # Inner iterations run just the comutation steps with data already loaded in host memory
+        inner_iterations: 10
+        # Minimum time measured by adaptive iteration count is 1 second
+        min_measure_seconds: 1
+        # If validation data should be generated and the results compared with it. Here we are only interested in execution times.
+        validate: false
+        # If result of the computation should be kept. Here we are only interested in the execution times.
+        keep: false
+      runs:
+        - name: original
+          algorithm: nai_orig_n_to_m
+
+        - name: multimat-both
+          algorithm: nai_shuffle_multimat_both_work_distribution_n_to_m
+          args:
+            warps_per_thread_block: [4, 8]
+            left_matrices_per_thread: [1, 2, 4]
+            right_matrices_per_thread: [1, 2, 4]
+            rows_per_thread: 1
+            distribution_type: ['none']
+
+        - name: multimat-both-multirow-both
+          algorithm: nai_shuffle_multirow_both_multimat_both_n_to_m
+          args:
+            warps_per_thread_block: [4, 8]
+            left_matrices_per_thread: [1, 2, 4]
+            right_matrices_per_thread: [1, 2, 4]
+            shifts_per_thread_right_matrix: [1, 2, 4]
+            left_rows_per_iteration: [1, 2, 4]
+
+        - name: fft
+          algorithm: fft_better_n_to_m
+          
