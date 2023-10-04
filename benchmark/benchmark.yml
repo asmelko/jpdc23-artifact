@@ -474,3 +474,57 @@ benchmark:
         - name: fft
           algorithm: fft_better_n_to_m
           
+    - name: one_to_one_fast
+      config:
+        # All input sizes to measure with
+        # Format is matrix_rows, matrix_cols, number of left matrices, number of right matrices
+        sizes:
+          - "16x16x1x1"
+          - "24x24x1x1"
+          - "32x32x1x1"
+          - "48x48x1x1"
+          - "64x64x1x1"
+          - "96x96x1x1"
+          - "128x128x1x1"
+          - "192x192x1x1"
+          - "256x256x1x1"
+        # Use float type, not double
+        data_type: single
+        # Measure the whole Computation, but without data loading from disk
+        benchmark_type: Algorithm
+        # Outer iterations run the cross executable again, clearing caches and loading data
+        outer_iterations: 1
+        # Inner iterations run just the comutation steps with data already loaded in host memory
+        inner_iterations: 10
+        # Minimum time measured by adaptive iteration count is 1 second
+        min_measure_seconds: 0.1
+        # If validation data should be generated and the results compared with it. Here we are only interested in execution times.
+        validate: false
+        # If result of the computation should be kept. Here we are only interested in the execution times.
+        keep: false
+      runs:
+        - name: original
+          # Name of the algorithm, listed by ./cross list
+          algorithm: nai_orig_one_to_one
+
+        - name: work_distribution
+          algorithm: nai_shuffle_work_distribution_one_to_one
+          args:
+            warps_per_thread_block: [4]
+            rows_per_thread: [1, 2, 4, 8, 16]
+            distribution_type: ['triangle']
+
+        - name: multirow_both
+          algorithm: nai_shuffle_multirow_both_one_to_one
+          args:
+            warps_per_thread_block: [4]
+            shifts_per_thread: [8]
+            left_rows_per_iteration: [8]
+
+        - name: warp-per-shift
+          algorithm: nai_warp_per_shift_one_to_one
+          args:
+            shifts_per_thread_block: [4]
+
+        - name: fft
+          algorithm: fft_orig_one_to_one

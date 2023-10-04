@@ -114,7 +114,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CUDA_STANDARD 17)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 # Requires cmake 3.18
-set(CMAKE_CUDA_ARCHITECTURES 70-real 80-real 89-real)
+set(CMAKE_CUDA_ARCHITECTURES 86-real)
 
 # See https://stackoverflow.com/questions/27018340/cmake-does-not-properly-find-cuda-library
 FIND_PACKAGE(CUDAToolkit 12.2 REQUIRED)
