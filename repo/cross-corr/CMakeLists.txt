@@ -27,16 +27,16 @@ set(ALG_LIMIT_OPTIONS
         "SHUFFLE_MULTIROW_RIGHT_MULTIMAT_RIGHT_RIGHT_ROWS_LIMIT:8:2:Maximum value of right_rows to generate code for"
         "SHUFFLE_MULTIROW_RIGHT_MULTIMAT_RIGHT_RIGHT_MATS_LIMIT:8:2:Maximum value of right_mats to generate code for"
 
-        "SHUFFLE_N_TO_M_MULTIMAT_BOTH_LEFT_MATRICES_PER_THREAD_LIMIT:1:2:Maximum value of left_matrices_per_thread to generate code for"
-        "SHUFFLE_N_TO_M_MULTIMAT_BOTH_RIGHT_MATRICES_PER_THREAD_LIMIT:1:2:Maximum value of right_matrices_per_thread to generate code for"
+        "SHUFFLE_N_TO_M_MULTIMAT_BOTH_LEFT_MATRICES_PER_THREAD_LIMIT:8:2:Maximum value of left_matrices_per_thread to generate code for"
+        "SHUFFLE_N_TO_M_MULTIMAT_BOTH_RIGHT_MATRICES_PER_THREAD_LIMIT:8:2:Maximum value of right_matrices_per_thread to generate code for"
 
         "SHUFFLE_N_TO_M_MULTIMAT_BOTH_LOCAL_MEM_LEFT_MATRICES_PER_THREAD_LIMIT:1:2:Maximum value of left_matrices_per_thread to generate code for"
         "SHUFFLE_N_TO_M_MULTIMAT_BOTH_LOCAL_MEM_RIGHT_MATRICES_PER_THREAD_LIMIT:1:2:Maximum value of right_matrices_per_thread to generate code for"
 
-        "SHUFFLE_N_TO_M_MULTIROW_BOTH_MULTIMAT_BOTH_SHIFTS_PER_THREAD_PER_RIGHT_MATRIX_LIMIT:1:2:Maximum value of shifts_per_thread_per_right_matrix to generate code for"
-        "SHUFFLE_N_TO_M_MULTIROW_BOTH_MULTIMAT_BOTH_RIGHT_MATRICES_PER_THREAD_LIMIT:1:2:Maximum value of right_matrices_per_thread to generate code for"
-        "SHUFFLE_N_TO_M_MULTIROW_BOTH_MULTIMAT_BOTH_LEFT_MATRICES_PER_THREAD_LIMIT:1:2:Maximum value of left_matrices_per_thread to generate code for"
-        "SHUFFLE_N_TO_M_MULTIROW_BOTH_MULTIMAT_BOTH_LEFT_ROWS_PER_ITERATION_LIMIT:1:2:Maximum value of left_rows_per_iteration to generate code for"
+        "SHUFFLE_N_TO_M_MULTIROW_BOTH_MULTIMAT_BOTH_SHIFTS_PER_THREAD_PER_RIGHT_MATRIX_LIMIT:4:2:Maximum value of shifts_per_thread_per_right_matrix to generate code for"
+        "SHUFFLE_N_TO_M_MULTIROW_BOTH_MULTIMAT_BOTH_RIGHT_MATRICES_PER_THREAD_LIMIT:4:2:Maximum value of right_matrices_per_thread to generate code for"
+        "SHUFFLE_N_TO_M_MULTIROW_BOTH_MULTIMAT_BOTH_LEFT_MATRICES_PER_THREAD_LIMIT:4:2:Maximum value of left_matrices_per_thread to generate code for"
+        "SHUFFLE_N_TO_M_MULTIROW_BOTH_MULTIMAT_BOTH_LEFT_ROWS_PER_ITERATION_LIMIT:4:2:Maximum value of left_rows_per_iteration to generate code for"
 
         "SHUFFLE_ONE_TO_MANY_MULTIROW_BOTH_MULTIMAT_RIGHT_SHIFTS_PER_RIGHT_MATRIX_LIMIT:4:2:Maximum value of shifts_per_right_matrix to generate code for"
         "SHUFFLE_ONE_TO_MANY_MULTIROW_BOTH_MULTIMAT_RIGHT_RIGHT_MATRICES_PER_THREAD_LIMIT:4:2:Maximum value of right_matrices_per_thread to generate code for"

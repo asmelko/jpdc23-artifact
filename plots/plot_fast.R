@@ -21,25 +21,25 @@ sisec=Vectorize(function(t)if(is.na(t))NA else sitools::f2si(t / 10^9, 's'))
 {
     data = c()
 
-    data_original = read.csv('../benchmark/results/one_to_one_fast/original.csv', header=T, sep=',')
+    data_original = read.csv('../results/one_to_one_fast/original.csv', header=T, sep=',')
     data_original["alg"] = "overlap-wise"
     data_original = subset(data_original, select=c(alg, Kernel, Input.matrix.rows))
 
-    data_wd = read.csv('../benchmark/results/one_to_one_fast/work_distribution.csv', header=T, sep=',')
+    data_wd = read.csv('../results/one_to_one_fast/work_distribution.csv', header=T, sep=',')
     data_wd["alg"] = "split-row"
     data_wd = subset(data_wd, warps_per_thread_block == 4)
     data_wd = subset(data_wd, rows_per_thread == 1)
     data_wd = subset(data_wd, distribution_type == "triangle")
     data_wd = subset(data_wd, select=c(alg, Kernel, Input.matrix.rows))
 
-    data_mb = read.csv('../benchmark/results/one_to_one_fast/multirow_both.csv', header=T, sep=',')
+    data_mb = read.csv('../results/one_to_one_fast/multirow_both.csv', header=T, sep=',')
     data_mb["alg"] = "multirow both"
     data_mb = subset(data_mb, warps_per_thread_block == 4)
     data_mb = subset(data_mb, shifts_per_thread == 8)
     data_mb = subset(data_mb, left_rows_per_iteration == 8)
     data_mb = subset(data_mb, select=c(alg, Kernel, Input.matrix.rows))
 
-    data_wps = read.csv('../benchmark/results/one_to_one_fast/warp-per-shift.csv', header=T, sep=',')
+    data_wps = read.csv('../results/one_to_one_fast/warp-per-shift.csv', header=T, sep=',')
     data_wps["alg"] = "warp-per-shift"
     data_wps = subset(data_wps, shifts_per_thread_block == 4)
     data_wps = subset(data_wps, select=c(alg, Kernel, Input.matrix.rows))
@@ -67,31 +67,31 @@ sisec=Vectorize(function(t)if(is.na(t))NA else sitools::f2si(t / 10^9, 's'))
 {
     data = c()
 
-    data_wd = read.csv('../benchmark/results/one_to_one_fast/work_distribution.csv', header=T, sep=',')
+    data_wd = read.csv('../results/one_to_one_fast/work_distribution.csv', header=T, sep=',')
     data_wd["alg"] = "split-row"
     data_wd = subset(data_wd, warps_per_thread_block == 4)
     data_wd = subset(data_wd, rows_per_thread == 1)
     data_wd = subset(data_wd, distribution_type == "triangle")
     data_wd = subset(data_wd, select=c(alg, Kernel, Input.matrix.rows))
 
-    data_mb = read.csv('../benchmark/results/one_to_one_fast/multirow_both.csv', header=T, sep=',')
+    data_mb = read.csv('../results/one_to_one_fast/multirow_both.csv', header=T, sep=',')
     data_mb["alg"] = "multirow both"
     data_mb = subset(data_mb, warps_per_thread_block == 4)
     data_mb = subset(data_mb, shifts_per_thread == 8)
     data_mb = subset(data_mb, left_rows_per_iteration == 8)
     data_mb = subset(data_mb, select=c(alg, Kernel, Input.matrix.rows))
 
-    data_wps = read.csv('../benchmark/results/one_to_one_fast/warp-per-shift.csv', header=T, sep=',')
+    data_wps = read.csv('../results/one_to_one_fast/warp-per-shift.csv', header=T, sep=',')
     data_wps["alg"] = "warp-per-shift"
     data_wps = subset(data_wps, shifts_per_thread_block == 4)
     data_wps = subset(data_wps, select=c(alg, Kernel, Input.matrix.rows))
 
-    data_fft = read.csv('../benchmark/results/one_to_one_fast/fft.csv', header=T, sep=',')
+    data_fft = read.csv('../results/one_to_one_fast/fft.csv', header=T, sep=',')
     data_fft["alg"] = "fft"
     data_fft["Kernel"] = data_fft["Forward.FFT"] + data_fft["Inverse.FFT"] + data_fft["Hadamard"]
     data_fft = subset(data_fft, select=c(alg, Kernel, Input.matrix.rows))
 
-    data_fft2 = read.csv('../benchmark/results/one_to_one_fast/fft.csv', header=T, sep=',')
+    data_fft2 = read.csv('../results/one_to_one_fast/fft.csv', header=T, sep=',')
     data_fft2["alg"] = "fft+prepare"
     data_fft2["Kernel"] = data_fft2["Forward.FFT"] + data_fft2["Inverse.FFT"] + data_fft2["Hadamard"] + data_fft2["Plan"]
     data_fft2_s <- split(data_fft2, data_fft2$Input.size)
