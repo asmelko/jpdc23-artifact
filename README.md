@@ -36,13 +36,14 @@ Hardware requirements:
 Software requirements:
 
 * [CUDA toolkit 12.2 or later](https://developer.nvidia.com/cuda-downloads) and appropriate driver
+* `cmake 3.24` or later
 * `boost` and `nlohmann` libraries
 * `python` for benchmarking
 * `R` software for plotting the graphs (see details below)
 
 Installing all dependencies on Debian/Ubuntu:
 ```
-sudo apt-get update && apt-get install -y r-base python3 python3-pip libboost-all-dev nlohmann-json3-dev
+sudo apt-get update && apt-get install -y r-base python3 python3-pip libboost-all-dev nlohmann-json3-dev cmake
 ```
 
 Afterwards, R packages need to be installed:

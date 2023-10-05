@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.24)
 
 # Handle superbuild first
 option (USE_SUPERBUILD "Whether or not a superbuild should be invoked" OFF)
@@ -113,8 +113,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_CUDA_STANDARD 17)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
-# Requires cmake 3.18
-set(CMAKE_CUDA_ARCHITECTURES 86-real)
+# Requires cmake 3.24
+set(CMAKE_CUDA_ARCHITECTURES native)
 
 # See https://stackoverflow.com/questions/27018340/cmake-does-not-properly-find-cuda-library
 FIND_PACKAGE(CUDAToolkit 12.2 REQUIRED)
