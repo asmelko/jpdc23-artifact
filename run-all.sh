@@ -25,5 +25,8 @@ cd -
 cd plots
 rm -rf one-to-one one-to-many n-to-m n-to-mn
 mkdir one-to-one one-to-many n-to-m n-to-mn
-Rscript plot_fast.R
+Rscript plot_one_to_one.R
+Rscript plot_one_to_many.R
+Rscript plot_n_to_mn.R
+Rscript plot_n_to_m.R
 cd -

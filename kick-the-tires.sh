@@ -12,7 +12,6 @@ cd -
 
 # plot subset of one-to-one experiments
 cd plots
-rm -rf one-to-one-fast
-mkdir one-to-one-fast
+rm -rf one-to-one-fast; mkdir one-to-one-fast
 Rscript plot_fast.R
 cd -
