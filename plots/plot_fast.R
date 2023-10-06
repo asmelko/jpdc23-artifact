@@ -2,9 +2,6 @@ library(ggplot2)
 library(cowplot)
 library(sitools)
 library(viridis)
-library(gridExtra)   
-library(grid)   
-library(stringr)
 library(dplyr)
 
 

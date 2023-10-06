@@ -36,13 +36,14 @@ Hardware requirements:
 Software requirements:
 
 * [CUDA toolkit 12.2 or later](https://developer.nvidia.com/cuda-downloads) and appropriate driver
+* `cmake 3.18` or later 
 * `boost` and `nlohmann` libraries
 * `python` for benchmarking
 * `R` software for plotting the graphs (see details below)
 
 Installing all dependencies on Debian/Ubuntu:
 ```
-sudo apt-get update && apt-get install -y r-base python3 python3-pip libboost-all-dev nlohmann-json3-dev
+sudo apt-get update && apt-get install -y r-base python3 python3-pip libboost-all-dev nlohmann-json3-dev cmake
 ```
 
 Afterwards, R packages need to be installed:
@@ -54,6 +55,8 @@ Then, python packages need to be installed:
 ```
 pip3 install numpy pandas scipy ruamel.yaml
 ```
+
+> Note: If the version of cmake is greater than `3.24`, cmake is able to discover the native CUDA Compute Capability (CC), under which the kernels will be compiled. If the cmake version is smaller, the CUDA compilation is defaulted to generate CC 5.0 PTX code. In order to provide the best results, it is advised to change this attribute according to the hardware at hand. To do so, see line 119 in `repo/cross-corr/CMakeLists.txt` and `repo/one-to-one-s/CMakeLists.txt`.
 
 ## Running the experiments
 
