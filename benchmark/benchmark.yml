@@ -58,6 +58,11 @@ benchmark:
           args:
             shifts_per_thread_block: [4, 16, 32]
 
+        - name: warp-per-shift-simple-indexing
+          algorithm: nai_warp_per_shift_simple_indexing_one_to_one
+          args:
+            shifts_per_thread_block: [4, 16, 32]
+
         - name: warp-per-shift-work-distribution
           algorithm: nai_warp_per_shift_work_distribution_one_to_one
           args:
@@ -285,7 +290,7 @@ benchmark:
             right_matrices_per_thread: [1, 2, 4, 8]
             rows_per_thread: 1
             distribution_type: ['none']
-            num_cuda_streams: [20]
+            num_cuda_streams: [1, 20]
 
         - name: multimat-right-work-distribution
           algorithm: nai_shuffle_multimat_right_work_distribution_n_to_mn
@@ -294,7 +299,7 @@ benchmark:
             right_matrices_per_thread: [1, 2, 4, 8]
             rows_per_thread: [1, 4, 8, 16]
             distribution_type: ['rectangle', 'triangle']
-            num_cuda_streams: [20]
+            num_cuda_streams: [1, 20]
 
         - name: multimat-right-multirow-both
           algorithm: nai_shuffle_multirow_both_multimat_right_n_to_mn
@@ -303,7 +308,7 @@ benchmark:
             right_matrices_per_thread: [1, 2, 4]
             shifts_per_thread_right_matrix: [1, 2, 4]
             left_rows_per_iteration: [1, 2, 4]
-            num_cuda_streams: [20]
+            num_cuda_streams: [1, 20]
 
         - name: fft
           algorithm: fft_orig_n_to_mn
@@ -343,7 +348,7 @@ benchmark:
             right_matrices_per_thread: [1, 2, 4, 8]
             rows_per_thread: 1
             distribution_type: ['none']
-            num_cuda_streams: [20]
+            num_cuda_streams: [1, 20]
 
         - name: multimat-right-multirow-both
           algorithm: nai_shuffle_multirow_both_multimat_right_n_to_mn
@@ -352,7 +357,7 @@ benchmark:
             right_matrices_per_thread: [1, 2, 4]
             shifts_per_thread_right_matrix: [1, 2, 4]
             left_rows_per_iteration: [1, 2, 4]
-            num_cuda_streams: [20]
+            num_cuda_streams: [1, 20]
 
         - name: fft
           algorithm: fft_orig_n_to_mn

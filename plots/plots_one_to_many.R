@@ -54,12 +54,12 @@ sisec=Vectorize(function(t)if(is.na(t))NA else sitools::f2si(t / 10^9, 's'))
     data = subset(data, comb %in% c("1x1","2x2","4x4"))
 
     ggsave("one-to-many/multimat-right-grouped-overlap.pdf", device='pdf', units="in", scale=S, width=W, height=H,
-        ggplot(data, aes(x=Input.matrix.rows,y=Kernel/Input.right.matrices/(2 * Input.matrix.rows -1 )^2, color=comb, shape=comb)) +
+        ggplot(data, aes(x=Input.matrix.rows,y=Kernel/Input.right.matrices/Input.matrix.rows^4, color=factor(shifts_per_thread_right_matrix), shape=factor(shifts_per_thread_right_matrix))) +
         geom_point(size=point_size) +
         geom_line(linewidth=line_size) +
         xlab("Matrices size (log-scale)")+
-        ylab("Time per overlap (log-scale)")+
-        labs(color="Left rows x shifts per thread", shape="Left rows x shifts per thread") +
+        ylab("Time per FMA (log-scale)")+
+        labs(color="Grouped overlaps per thread", shape="Grouped overlaps per thread") +
         scale_color_brewer(palette="Paired")+
         scale_y_log10(labels = sisec) +
         scale_x_log10(labels = function(x) paste0(x,"x",x), breaks=c(16,32,64,128,256,512)) +
@@ -145,8 +145,8 @@ sisec=Vectorize(function(t)if(is.na(t))NA else sitools::f2si(t / 10^9, 's'))
     data = subset(data, Input.matrix.rows <= 256)
 
     data["comb"] = paste0(data$right_matrices_per_thread,"x",data$rows_per_thread)
-    data["Matrices"] = paste0("1x",data$Input.right.matrices)
-    data["Matrices"] = factor(data$Matrices, levels=c("1x2","1x8","1x32"))
+    data["Matrices"] = paste0("1-to-",data$Input.right.matrices)
+    data["Matrices"] = factor(data$Matrices, levels=c("1-to-2","1-to-8","1-to-32"))
 
     ggsave("one-to-many/multimat-right-split-row.pdf", device='pdf', units="in", scale=S, width=W, height=H,
         ggplot(data, aes(x=Input.matrix.rows,y=Kernel, color=comb, shape=comb)) +
@@ -158,7 +158,7 @@ sisec=Vectorize(function(t)if(is.na(t))NA else sitools::f2si(t / 10^9, 's'))
         scale_color_brewer(palette="Paired")+
         scale_y_log10(labels = sisec) +
         scale_x_log10(labels = function(x) paste0(x,"x",x), breaks=c(16,32,64,128,256,512)) +
-        facet_wrap(~Matrices, labeller=label_both, scales="free_y") +
+        facet_wrap(~Matrices, scales="free_y") +
         theme + background_grid() + theme(legend.position="bottom", axis.text.x = element_text(angle = -20, vjust=0.05))
     )
 }
@@ -180,17 +180,19 @@ sisec=Vectorize(function(t)if(is.na(t))NA else sitools::f2si(t / 10^9, 's'))
 
     data = subset(data, Input.right.matrices %in% c(2, 8, 32))
     data = subset(data, right_matrices_per_thread %in% c(1, 2, 4, 8))
-    data = subset(data, rows_per_thread %in% c(1, 4, 16, "ALL"))
+    data = subset(data, rows_per_thread %in% c(1, 4, 8, "ALL"))
     data = subset(data, warps_per_thread_block == 4)
     data = subset(data, Input.matrix.rows <= 256)
 
+    data["rows_per_thread"] = factor(data$rows_per_thread, levels=c("1","4","8","ALL"))
+
     ggsave("one-to-many/multimat-right-split-row-MxR.pdf", device='pdf', units="in", scale=S, width=W*2, height=H*2,
-        ggplot(data, aes(x=Input.matrix.rows,y=Kernel/(2 * Input.matrix.rows -1 )^2, color=factor(rows_per_thread), shape=factor(rows_per_thread))) +
+        ggplot(data, aes(x=Input.matrix.rows,y=Kernel/Input.right.matrices/(2 * Input.matrix.rows -1 )^2, color=factor(rows_per_thread), shape=factor(rows_per_thread))) +
         geom_point(size=point_size) +
         geom_line(linewidth=line_size) +
         xlab("Matrices size (log-scale)")+
         ylab("Time per overlap (log-scale)")+
-        scale_color_brewer(palette="Paired")+
+        scale_color_manual(values=RColorBrewer::brewer.pal(5,'YlGnBu')[2:5]) +
         scale_y_log10(labels = sisec) +
         scale_x_log10(labels = function(x) paste0(x,"x",x), breaks=c(16,32,64,128,256,512)) +
         facet_grid(Input.right.matrices~right_matrices_per_thread, labeller=label_both) +
@@ -206,7 +208,7 @@ sisec=Vectorize(function(t)if(is.na(t))NA else sitools::f2si(t / 10^9, 's'))
     data_original = subset(data_original, select=c(alg, Kernel, Input.matrix.rows, Input.right.matrices))
 
     data_wd = read.csv('../results/one_to_many/multimat-right-work-distribution.csv', header=T, sep=',')
-    data_wd["alg"] = "split-row"
+    data_wd["alg"] = "multimat-right split-row"
     data_wd = subset(data_wd, warps_per_thread_block == 4)
     data_wd = subset(data_wd, distribution_type == "triangle")
     data_wd = subset(data_wd, rows_per_thread == 1)
@@ -214,57 +216,7 @@ sisec=Vectorize(function(t)if(is.na(t))NA else sitools::f2si(t / 10^9, 's'))
     data_wd = subset(data_wd, select=c(alg, Kernel, Input.matrix.rows, Input.right.matrices))
 
     data_mb = read.csv('../results/one_to_many/multimat-right-multirow-both.csv', header=T, sep=',')
-    data_mb["alg"] = "grouped-overlap"
-    data_mb = subset(data_mb, warps_per_thread_block == 4)
-    data_mb = subset(data_mb, left_rows_per_iteration == 4)
-    # data_mb_s = subset(data_mb, shifts_per_thread_right_matrix == 1)
-    # data_mb_s = subset(data_mb_s, right_matrices_per_thread == 1)
-    # data_mb_s = subset(data_mb_s, Input.matrix.rows < 32)
-    # data_mb_b = subset(data_mb, shifts_per_thread_right_matrix == 4)
-    # data_mb_b = subset(data_mb_b, right_matrices_per_thread == 4)
-    # data_mb_b = subset(data_mb_b, Input.matrix.rows >= 32)
-    # data_mb = rbind(data_mb_s, data_mb_b)
-    data_mb = subset(data_mb, shifts_per_thread_right_matrix == 4)
-    data_mb = subset(data_mb, right_matrices_per_thread == 4)
-    data_mb = subset(data_mb, select=c(alg, Kernel, Input.matrix.rows, Input.right.matrices))
-    
-    data = rbind(data, data_original, data_wd, data_mb)
-    data = subset(data, Input.matrix.rows <= 256)
-    data = subset(data, Input.right.matrices %in% c(2, 8, 32))
-
-    data["Matrices"] = paste0("1x",data$Input.right.matrices)
-    data["Matrices"] = factor(data$Matrices, levels=c("1x2","1x8","1x32"))
-
-    data = data.frame(data %>% group_by_at(names(data)[-grep("(Kernel)|(Kernel_iterations)|(X)|(Args)", names(data))]) %>% summarise(Kernel = mean(Kernel)))
-
-    ggsave("one-to-many/one-to-many.pdf", device='pdf', units="in", scale=S, width=W, height=H,
-        ggplot(data, aes(x=Input.matrix.rows,y=Kernel, color=alg, shape=alg)) +
-        geom_point(size=point_size) +
-        geom_line(linewidth=line_size) +
-        xlab("Matrices size (log-scale)")+
-        ylab("Wall time (log-scale)")+
-        labs(color="Algorithm", shape="Algorithm") +
-        scale_color_brewer(palette="Set1")+
-        scale_y_log10(labels = sisec) +
-        scale_x_log10(labels = function(x) paste0(x,"x",x), breaks=c(16,32,64,128,256,512)) +
-        facet_wrap(~Matrices, labeller=label_both, scales="free_y") +
-        theme + background_grid() + theme(legend.position="bottom", axis.text.x = element_text(angle = -20, vjust=0.05))
-    )
-}
-
-{
-    data = c()
-
-    data_wd = read.csv('../results/one_to_many/multimat-right-work-distribution.csv', header=T, sep=',')
-    data_wd["alg"] = "split-row"
-    data_wd = subset(data_wd, warps_per_thread_block == 4)
-    data_wd = subset(data_wd, distribution_type == "triangle")
-    data_wd = subset(data_wd, rows_per_thread == 1)
-    data_wd = subset(data_wd, right_matrices_per_thread == 8)
-    data_wd = subset(data_wd, select=c(alg, Kernel, Input.matrix.rows, Input.right.matrices))
-
-    data_mb = read.csv('../results/one_to_many/multimat-right-multirow-both.csv', header=T, sep=',')
-    data_mb["alg"] = "grouped-overlap"
+    data_mb["alg"] = "multimat-right grouped-overlap"
     data_mb = subset(data_mb, warps_per_thread_block == 4)
     data_mb = subset(data_mb, left_rows_per_iteration == 4)
     data_mb = subset(data_mb, shifts_per_thread_right_matrix == 4)
@@ -277,7 +229,7 @@ sisec=Vectorize(function(t)if(is.na(t))NA else sitools::f2si(t / 10^9, 's'))
     data_fft = subset(data_fft, select=c(alg, Kernel, Input.matrix.rows, Input.right.matrices))
 
     data_fft2 = read.csv('../results/one_to_many/fft.csv', header=T, sep=',')
-    data_fft2["alg"] = "fft+prepare"
+    data_fft2["alg"] = "fft+plan"
     data_fft2["Kernel"] = data_fft2["Forward.FFT"] + data_fft2["Inverse.FFT"] + data_fft2["Hadamard"] + data_fft2["Plan"]
     data_fft2_s <- split(data_fft2, data_fft2$Input.size)
     data_fft2 <- NULL
@@ -291,12 +243,16 @@ sisec=Vectorize(function(t)if(is.na(t))NA else sitools::f2si(t / 10^9, 's'))
     data = subset(data, Input.matrix.rows <= 256)
     data = subset(data, Input.right.matrices %in% c(2, 8, 32))
 
-    data["Matrices"] = paste0("1x",data$Input.right.matrices)
-    data["Matrices"] = factor(data$Matrices, levels=c("1x2","1x8","1x32"))
+    data["Matrices"] = paste0("1-to-",data$Input.right.matrices)
+    data["Matrices"] = factor(data$Matrices, levels=c("1-to-2","1-to-8","1-to-32"))
     
     data = data.frame(data %>% group_by_at(names(data)[-grep("(Kernel)|(Kernel_iterations)|(X)|(Args)", names(data))]) %>% summarise(Kernel = mean(Kernel)))
 
-    ggsave("one-to-many/one-to-many-fft.pdf", device='pdf', units="in", scale=S, width=W, height=H,
+    # TFLOPS computation
+    # print((10^9/(subset(data, Input.matrix.rows == 16 & Matrices == "1x8" & alg == "multimat-right split-row")$Kernel/8/(16^4)))/10^12)
+    # print((10^9/(subset(data, Input.matrix.rows == 256 & Matrices == "1x8" & alg == "multimat-right grouped-overlap")$Kernel/8/(256^4)))/10^12)
+
+    ggsave("one-to-many/one-to-many.pdf", device='pdf', units="in", scale=S, width=W, height=H,
         ggplot(data, aes(x=Input.matrix.rows,y=Kernel, color=alg, shape=alg)) +
         geom_point(size=point_size) +
         geom_line(linewidth=line_size) +
@@ -306,7 +262,7 @@ sisec=Vectorize(function(t)if(is.na(t))NA else sitools::f2si(t / 10^9, 's'))
         scale_color_brewer(palette="Set1")+
         scale_y_log10(labels = sisec) +
         scale_x_log10(labels = function(x) paste0(x,"x",x), breaks=c(16,32,64,128,256,512)) +
-        facet_wrap(~Matrices, labeller=label_both, scales="free_y") +
+        facet_wrap(~Matrices, scales="free_y") +
         theme + background_grid() + theme(legend.position="bottom", axis.text.x = element_text(angle = -20, vjust=0.05))
     )
 }
