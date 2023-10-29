@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 REPOSITORY_ROOT_DIR="${PWD}/$1"
 
 BUILD_DIR="${REPOSITORY_ROOT_DIR}/build"

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 # build 
 cd repo
 ./build.sh cross-corr

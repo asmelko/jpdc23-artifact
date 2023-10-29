@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 # build one-to-one
 cd repo
 ./build-fast.sh cross-corr
