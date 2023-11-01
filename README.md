@@ -104,7 +104,7 @@ Here we provide description for each figure in plots directory:
 | `one-to-one/one-to-one.pdf`|comparison of all one-to-one algorithms and optimizations | Figure 17
 | `one-to-one/warp-per-overlap.pdf`|one-to-one warp-per-overlap optimization |  not included
 | `one-to-one/warp-per-overlap-shared-memory.pdf`|one-to-one warp-per-overlap with shared memory optimization |   not included
-| `one-to-one/one-to-one-warp-per-overlap-and-split-row.pdf`|comparison of one-to-one warp-per-overlap optimizations and split-row optimization |  not included.
+| `one-to-one/one-to-one-warp-per-overlap-and-split-row.pdf`|comparison of one-to-one warp-per-overlap optimizations and split-row optimization |  not included
 | `one-to-many/multimat-right-grouped-overlap.pdf`|one-to-many multi-matrix-right grouped-overlap optimization | Figure 18
 | `one-to-many/multimat-right-grouped-overlap-*.pdf`|one-to-many multi-matrix-right grouped-overlap optimization with different combinations of cached left rows, cached shifts, right matrices per thread and inputs |  not included
 | `one-to-many/multimat-right-split-row.pdf`|one-to-many multi-matrix-right split-row optimization | Figure 19
