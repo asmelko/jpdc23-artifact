@@ -1,0 +1,10 @@
+,Kernel,Kernel_iterations,Name,Args,Input size,Input total items,Input matrix rows,Input matrix cols,Input matrix area,Input left matrices,Input right matrices,Input type,Group
+0,13438,111617,original,,16_16_1_1,512,16,16,256,1,1,1x1,one_to_one
+0,16654,90067,original,,24_24_1_1,1152,24,24,576,1,1,1x1,one_to_one
+0,37440,40063,original,,32_32_1_1,2048,32,32,1024,1,1,1x1,one_to_one
+0,74179,20222,original,,48_48_1_1,4608,48,48,2304,1,1,1x1,one_to_one
+0,120121,10000,original,,64_64_1_1,8192,64,64,4096,1,1,1x1,one_to_one
+0,245181,6118,original,,96_96_1_1,18432,96,96,9216,1,1,1x1,one_to_one
+0,421295,3560,original,,128_128_1_1,32768,128,128,16384,1,1,1x1,one_to_one
+0,1395768,1075,original,,192_192_1_1,73728,192,192,36864,1,1,1x1,one_to_one
+0,3239228,469,original,,256_256_1_1,131072,256,256,65536,1,1,1x1,one_to_one

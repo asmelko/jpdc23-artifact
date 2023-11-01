@@ -1,0 +1,16 @@
+,Kernel,Kernel_iterations,Name,Args,Input size,Input total items,Input matrix rows,Input matrix cols,Input matrix area,Input left matrices,Input right matrices,Input type,Group
+0,33684,44376,original,,16_16_1_2,768,16,16,256,1,2,1x2,one_to_many
+0,122966,10000,original,,16_16_1_8,2304,16,16,256,1,8,1x8,one_to_many
+0,98337,15254,original,,32_32_1_2,3072,32,32,1024,1,2,1x2,one_to_many
+0,477270,3142,original,,16_16_1_32,8448,16,16,256,1,32,1x32,one_to_many
+0,353867,4238,original,,32_32_1_8,9216,32,32,1024,1,8,1x8,one_to_many
+0,316902,4732,original,,64_64_1_2,12288,64,64,4096,1,2,1x2,one_to_many
+0,1380120,1087,original,,32_32_1_32,33792,32,32,1024,1,32,1x32,one_to_many
+0,1162257,1291,original,,64_64_1_8,36864,64,64,4096,1,8,1x8,one_to_many
+0,1484437,1010,original,,128_128_1_2,49152,128,128,16384,1,2,1x2,one_to_many
+0,4536125,331,original,,64_64_1_32,135168,64,64,4096,1,32,1x32,one_to_many
+0,5927315,254,original,,128_128_1_8,147456,128,128,16384,1,8,1x8,one_to_many
+0,11329515,100,original,,256_256_1_2,196608,256,256,65536,1,2,1x2,one_to_many
+0,25791823,58,original,,128_128_1_32,540672,128,128,16384,1,32,1x32,one_to_many
+0,47600330,33,original,,256_256_1_8,589824,256,256,65536,1,8,1x8,one_to_many
+0,201844100,8,original,,256_256_1_32,2162688,256,256,65536,1,32,1x32,one_to_many
