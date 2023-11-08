@@ -11,7 +11,7 @@ The artifact comprises the following directories:
 * `repo` -- the CUDA implementation of cross-correlation
   - `cross-corr` -- main codebase containing all the kernel source files
   - `one-to-one-s` -- a copy of the codebase with modified one-to-one grouped-overlap kernels to fully saturate GPU for specific micro-benchmarks
-* `results` -- containing plots (including those that were not published in the paper due to the page limit) and CSV data files with measurements (that were used to generate the plots)
+* `presented-results` -- containing plots (including those that were not published in the paper due to the page limit) and CSV data files with measurements (that were used to generate the plots) from our GPU cluster
 
 
 ## Detailed artifact contents
@@ -76,7 +76,7 @@ sudo R -e "install.packages(c('ggplot2', 'cowplot', 'sitools', 'viridis', 'dplyr
 
 Our experiments are designed to provide a comprehensive analysis of the aforementioned algorithms running various combinations of parameters computing different sizes of input instances. Therefore, the overall duration of **running the experiments is quite long** (currently about **2 to 3 days** on our GPU cluster).
 
-In order to provide a swift way to check the reproducibility of our experiments, we prepared a special script that runs only a subset of benchmarks.
+To provide a swift way to check the reproducibility of our experiments, we prepared a special script that runs only a subset of benchmarks.
 
 **Kick the tires:**
 
@@ -101,12 +101,12 @@ To run the complete benchmark, execute
 
 ## Measured results
 
-The results measured by `./run-all.sh` on our GPU cluster were stored in the `results` directory. The `results/data` directory is divided into three subdirectories, each containing results from different GPU architectures:
+The results measured by `./run-all.sh` on our GPU cluster were stored in the `presented-results` directory. The `presented-results/data` directory is divided into three subdirectories, each containing results from different GPU architectures:
 - `ada` -- NVIDIA Tesla L40 PCIe 48 GB
 - `ampere` -- NVIDIA Tesla A100 PCIe 80 GB
 - `volta` -- NVIDIA Tesla V100 SXM2 32 GB
 
-The `results/plots` directory contains only figures generated for the `ampere` architecture. To generate the plots of other architectures, the plot scripts (in `plots` directory). Here we describe each figure in the `results/plots` directory:
+The `presented-results/plots` directory contains only figures generated for the `ampere` architecture. To generate the plots of other architectures, the plot scripts (in `plots` directory). Here we describe each figure in the `presented-results/plots` directory:
 
 | Plot | Description | Figure number in paper |
 | --------------------------- | ----------- | -- |
