@@ -18,7 +18,7 @@
 | Warp per shift with work distribution | [naive_warp_per_shift.cu](./naive_warp_per_shift.cu) | `ccn_warp_per_shift_work_distribution` |
 | Warp per shift with shared memory | [naive_warp_per_shift_shared_mem.cu](./naive_warp_per_shift_shared_mem.cu) | `ccn_warp_per_shift_shared_mem` |
 
-To use these kernels for implementation of different input types and to implement time measurements, each kernel is wrapped by one class for each input type it is used for. This class handles algorithm arguments, time measurement, data loading, allocation, transfer, kernel execution, transfer back, result store, deallocation. These classes can be found in the files [one_to_one.hpp](./one_to_one.hpp), [one_to_many.hpp](./one_to_many.hpp), [n_to_mn.hpp](./n_to_mn.hpp), and[n_to_m.hpp](./n_to_m.hpp), based on the onput type they implement.
+To use these kernels for the implementation of different input types and to implement time measurements, each kernel is wrapped by one class for each input type it is used for. This class handles algorithm arguments, time measurement, data loading, allocation, transfer, kernel execution, transfer back, result store, and deallocation. These classes can be found in the files [one_to_one.hpp](./one_to_one.hpp), [one_to_many.hpp](./one_to_many.hpp), [n_to_mn.hpp](./n_to_mn.hpp), and[n_to_m.hpp](./n_to_m.hpp), based on the input type they implement.
 
 ## Algorithm compile options
 
